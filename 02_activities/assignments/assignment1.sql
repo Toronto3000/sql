@@ -14,7 +14,7 @@ sorted by customer_last_name, then customer_first_ name. */
 
 SELECT *
 FROM customer
-ORDER BY customer_first_name, customer_last_name
+ORDER BY  customer_last_name, customer_first_name
 LIMIT 10;
 
 
@@ -23,7 +23,7 @@ LIMIT 10;
 -- option 1
 
 SELECT *
-FROM product
+FROM customer_purchases
 	WHERE product_id = 4 or product_id = 9;
 
 -- option 2
@@ -98,7 +98,7 @@ SELECT v.vendor_id, v.vendor_name, v.vendor_type,
 	   vba.booth_number, vba.market_date
 FROM vendor AS v
 INNER JOIN vendor_booth_assignments AS vba
-	  ON v.vendor_id - vba.vendor_id
+	  ON v.vendor_id = vba.vendor_id
 ORDER BY v.vendor_name, vba.market_date;
 
 
@@ -110,7 +110,7 @@ each vendor has rented a booth at the farmer’s market
 by counting the vendor booth assignments per vendor_id. */
 
 SELECT vendor_id,
-       count(*) AS both_rental_count
+       count(*) AS booth_rental_count
 FROM vendor_booth_assignments
 GROUP BY vendor_id;
 
