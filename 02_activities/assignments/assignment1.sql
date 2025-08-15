@@ -1,7 +1,3 @@
-/* ASSIGNMENT 1 */
-/* SECTION 2 */
-
-
 --SELECT
 /* 1. Write a query that returns everything in the customer table. */
 
@@ -14,7 +10,7 @@ sorted by customer_last_name, then customer_first_ name. */
 
 SELECT *
 FROM customer
-ORDER BY customer_first_name, customer_last_name
+ORDER BY  customer_last_name, customer_first_name
 LIMIT 10;
 
 
@@ -23,7 +19,7 @@ LIMIT 10;
 -- option 1
 
 SELECT *
-FROM product
+FROM customer_purchases
 	WHERE product_id = 4 or product_id = 9;
 
 -- option 2
@@ -56,8 +52,7 @@ WHERE vendor_id BETWEEN 8 AND 10;
 
 
 --CASE
-/* 1. Products can be sold by the individual unit or by bulk measures like lbs. or oz. 
-Using the product table, write a query that outputs the product_id and product_name
+	@@ -39,62 +61,135 @@ Using the product table, write a query that outputs the product_id and product_n
 columns and add a column called prod_qty_type_condensed that displays the word “unit” 
 if the product_qty_type is “unit,” and otherwise displays the word “bulk.” */
 
@@ -80,7 +75,7 @@ SELECT product_id, product_name
 	When product_qty_type = 'unit' THEN 'unit'
 	ELSE 'bulk'
  END AS prod_qty_type_condensed
- 
+
 , CASE
 	WHEN LOWER(product_name) LIKE "%pepper%" THEN 1
 	ELSE 0
@@ -98,7 +93,7 @@ SELECT v.vendor_id, v.vendor_name, v.vendor_type,
 	   vba.booth_number, vba.market_date
 FROM vendor AS v
 INNER JOIN vendor_booth_assignments AS vba
-	  ON v.vendor_id - vba.vendor_id
+	  ON v.vendor_id = vba.vendor_id
 ORDER BY v.vendor_name, vba.market_date;
 
 
@@ -110,7 +105,7 @@ each vendor has rented a booth at the farmer’s market
 by counting the vendor booth assignments per vendor_id. */
 
 SELECT vendor_id,
-       count(*) AS both_rental_count
+       count(*) AS booth_rental_count
 FROM vendor_booth_assignments
 GROUP BY vendor_id;
 
@@ -120,7 +115,6 @@ wants to give a bumper sticker to everyone who has ever
 spent more than $2000 at the market. Write a query that 
 generates a list of customers for them to give stickers to,
 sorted by last name, then first name. 
-
 HINT: This query requires you to join two tables, use an aggregate function, and use the HAVING keyword. */
 
 SELECT c.customer_id, c.customer_first_name,
@@ -139,13 +133,11 @@ ORDER BY c.customer_last_name, c.customer_first_name;
 a temp.new_vendor and then add a 10th vendor
 : Thomass Superfood Store, a Fresh Focused store,
  owned by Thomas Rosenthal
-
 HINT: This is two total queries -- first create the table from
 the original, then insert the new 10th vendor. When inserting 
 the new vendor, you need to appropriately align the columns to be 
 inserted (there are five columns to be inserted, I've given you 
 the details, but not the syntax) 
-
 -> To insert the new row use VALUES, specifying the value you want for each column:
 VALUES(col1,col2,col3,col4,col5) 
 */
@@ -177,18 +169,17 @@ SELECT customer_id,
 		STRFTIME('%m', market_date) AS month,
 		STRFTIME('%Y', market_date) AS year
 FROM customer_purchases;
- 
+
 
 /* 2. Using the previous query as a base, 
 determine how much money each customer spent in April 2022. 
 Remember that money spent is quantity*cost_to_customer_per_qty. 
-
 HINTS: you will need to AGGREGATE, GROUP BY, and filter...
 but remember, STRFTIME returns a STRING for your WHERE statement!! */
 
 SELECT customer_id,
        SUM(quantity*cost_to_customer_per_qty) AS total_spent
-	
+
 FROM customer_purchases
 WHERE STRFTIME('%m', market_date) = '04' AND
        STRFTIME('%Y', market_date) = '2022'	
