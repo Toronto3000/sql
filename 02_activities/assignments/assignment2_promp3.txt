@@ -1,0 +1,37 @@
+Prompt 3
+The store wants to keep customer addresses. Propose two architectures for the CUSTOMER_ADDRESS table, one that will retain changes, and another that will overwrite. Which is type 1, which is type 2?
+
+HINT: search type 1 vs type 2 slowly changing dimensions.
+
+
+
+retain changes:
+
+CREATE TABLE customer_adress(
+		address_id INT primary key,
+		cust_id INT,
+		cust_street VARCHAR(300),
+		cust_city VARCHAR(80)),
+		cust-postal_code VARCH(10),
+                cust_provinceVARCHAR(30),
+		date_of_registration DATE,
+                date_of_end   DATE,
+		IsCurrent  BOOLEAN) ;
+
+
+
+overwrite changes:
+
+
+CREATE TABLE customer_adress(
+		address_id INT primary key,
+		cust_id INT,
+		cust_street VARCHAR(300),
+		cust_city VARCHAR(80)),
+		cust-postal_code VARCH(10),
+                cust_province VARCHAR(30));
+
+
+
+
+                
